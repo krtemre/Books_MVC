@@ -1,21 +1,22 @@
-﻿using BooksWeb.Data;
-using BooksWeb.Models;
+﻿using Books.DataAccess.Repository.IRepository;
+using Books.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BooksWeb.Controllers
+namespace BooksWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _unitOfWork.CategoryRepository.GetAll().ToList();
 
             return View(objCategoryList);
         }
@@ -32,10 +33,11 @@ namespace BooksWeb.Controllers
             {
                 ModelState.AddModelError("name", "The Display Order cannot exactly same as Name.");
             }
+
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.CategoryRepository.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category created successfuly";
                 return RedirectToAction("Index");
             }
@@ -48,7 +50,7 @@ namespace BooksWeb.Controllers
             if (id == null || id == 0)
                 return NotFound(); //Error view
 
-            var edit = _db.Categories.FirstOrDefault(c => c.Id == id);
+            var edit = _unitOfWork.CategoryRepository.Get(c => c.Id == id);
 
             if (edit == null)
                 return NotFound(); //Error view
@@ -65,8 +67,8 @@ namespace BooksWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.CategoryRepository.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category updated successfuly";
                 return RedirectToAction("Index");
             }
@@ -79,7 +81,7 @@ namespace BooksWeb.Controllers
             if (id == null || id == 0)
                 return NotFound(); //Error view
 
-            var delete = _db.Categories.FirstOrDefault(c => c.Id == id);
+            var delete = _unitOfWork.CategoryRepository.Get(c => c.Id == id);
 
             if (delete == null)
                 return NotFound(); //Error view
@@ -90,13 +92,13 @@ namespace BooksWeb.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Category? obj = _db.Categories.FirstOrDefault(s => s.Id == id);
+            Category? obj = _unitOfWork.CategoryRepository.Get(s => s.Id == id);
 
             if (obj == null)
                 return NotFound();
 
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.CategoryRepository.Remove(obj);
+            _unitOfWork.Save();
             TempData["success"] = "Category deleted successfuly";
             return RedirectToAction("Index");
         }
