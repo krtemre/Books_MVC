@@ -18,6 +18,9 @@ namespace Books.DataAccess.Repository
         {
             _db = db;
             this.dbSet = _db.Set<T>();
+
+            //_db.Products.Include(s => s.Category).Include(s => s.Category); // Can be multiple
+            _db.Products.Include(s => s.Category).Include(u => u.CategoryId);
         }
 
         public void Add(T item)
@@ -25,18 +28,38 @@ namespace Books.DataAccess.Repository
             dbSet.Add(item);
         }
 
-        public T? Get(Expression<Func<T, bool>> filter)
+        public T? Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
 
             query = query.Where(filter);
 
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.
+                    Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        //Category, CoverType //Case sensitive must mach exactly
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if(!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach(var includeProp in includeProperties.
+                    Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
             return query.ToList();
         }
 

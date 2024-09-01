@@ -1,10 +1,13 @@
 ﻿using Books.DataAccess.Repository.IRepository;
 using Books.Models;
+using Books.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BooksWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -16,7 +19,7 @@ namespace BooksWeb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _unitOfWork.CategoryRepository.GetAll().ToList();
+            List<Category> objCategoryList = _unitOfWork.Category.GetAll().ToList();
 
             return View(objCategoryList);
         }
@@ -36,7 +39,7 @@ namespace BooksWeb.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _unitOfWork.CategoryRepository.Add(obj);
+                _unitOfWork.Category.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Category created successfuly";
                 return RedirectToAction("Index");
@@ -50,7 +53,7 @@ namespace BooksWeb.Areas.Admin.Controllers
             if (id == null || id == 0)
                 return NotFound(); //Error view
 
-            var edit = _unitOfWork.CategoryRepository.Get(c => c.Id == id);
+            var edit = _unitOfWork.Category.Get(c => c.Id == id);
 
             if (edit == null)
                 return NotFound(); //Error view
@@ -67,7 +70,7 @@ namespace BooksWeb.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                _unitOfWork.CategoryRepository.Update(obj);
+                _unitOfWork.Category.Update(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Category updated successfuly";
                 return RedirectToAction("Index");
@@ -81,7 +84,7 @@ namespace BooksWeb.Areas.Admin.Controllers
             if (id == null || id == 0)
                 return NotFound(); //Error view
 
-            var delete = _unitOfWork.CategoryRepository.Get(c => c.Id == id);
+            var delete = _unitOfWork.Category.Get(c => c.Id == id);
 
             if (delete == null)
                 return NotFound(); //Error view
@@ -92,12 +95,12 @@ namespace BooksWeb.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Category? obj = _unitOfWork.CategoryRepository.Get(s => s.Id == id);
+            Category? obj = _unitOfWork.Category.Get(s => s.Id == id);
 
             if (obj == null)
                 return NotFound();
 
-            _unitOfWork.CategoryRepository.Remove(obj);
+            _unitOfWork.Category.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "Category deleted successfuly";
             return RedirectToAction("Index");

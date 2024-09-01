@@ -1,9 +1,11 @@
 ﻿using Books.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Books.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         // add-migration  -(name) (adds table to database tables)
         // update-database (updates database)
@@ -15,9 +17,12 @@ namespace Books.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; } // The table of Category named Categories
         public DbSet<Product> Products { get; set; } // The table of Product named Categories
+        public DbSet<ApplicationUser>  ApplicationUsers { get; set; } // if want to extend identity user
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
@@ -36,7 +41,9 @@ namespace Books.DataAccess.Data
                     ListPrice = 99,
                     Price = 90,
                     Price50 = 85,
-                    Price100 = 80
+                    Price100 = 80,
+                    CategoryId = 1,
+                    ImageUrl = "",
                 },
                 new Product
                 {
@@ -48,7 +55,9 @@ namespace Books.DataAccess.Data
                     ListPrice = 40,
                     Price = 30,
                     Price50 = 25,
-                    Price100 = 20
+                    Price100 = 20,
+                    CategoryId = 1,
+                    ImageUrl = "",
                 },
                 new Product
                 {
@@ -60,7 +69,9 @@ namespace Books.DataAccess.Data
                     ListPrice = 55,
                     Price = 50,
                     Price50 = 40,
-                    Price100 = 35
+                    Price100 = 35,
+                    CategoryId = 1,
+                    ImageUrl = "",
                 },
                 new Product
                 {
@@ -72,7 +83,9 @@ namespace Books.DataAccess.Data
                     ListPrice = 70,
                     Price = 65,
                     Price50 = 60,
-                    Price100 = 55
+                    Price100 = 55,
+                    CategoryId = 1,
+                    ImageUrl = "",
                 },
                 new Product
                 {
@@ -84,7 +97,9 @@ namespace Books.DataAccess.Data
                     ListPrice = 30,
                     Price = 27,
                     Price50 = 25,
-                    Price100 = 20
+                    Price100 = 20,
+                    CategoryId = 1,
+                    ImageUrl = "",
                 },
                 new Product
                 {
@@ -96,7 +111,9 @@ namespace Books.DataAccess.Data
                     ListPrice = 25,
                     Price = 23,
                     Price50 = 22,
-                    Price100 = 20
+                    Price100 = 20,
+                    CategoryId = 1,
+                    ImageUrl = "",
                 });
         }
     }
