@@ -17,6 +17,9 @@ namespace Books.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; } // The table of Category named Categories
         public DbSet<Product> Products { get; set; } // The table of Product named Categories
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
         public DbSet<ApplicationUser>  ApplicationUsers { get; set; } // if want to extend identity user
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +31,11 @@ namespace Books.DataAccess.Data
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 },
                 new Category { Id = 4, Name = "Ecenomy", DisplayOrder = 4 }
+                );
+
+            modelBuilder.Entity<Company>().HasData(
+                new Company { Id = 1, Name = "Company Ankara", StreetAddress = "Street", State="Turkey", PhoneNumber="0123456789", City="Ankara", PostalCode="06000" },
+                new Company { Id = 2, Name = "Company Istanbul", StreetAddress = "Street", State="Turkey", PhoneNumber="0123456789", City="Istanbul", PostalCode="34000" }
                 );
 
             modelBuilder.Entity<Product>().HasData(

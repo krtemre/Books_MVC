@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using Books.DataAccess.Repository.IRepository;
 using Books.Models;
 using Books.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.CodeAnalysis.Elfie.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -27,6 +29,7 @@ namespace BooksWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -34,7 +37,8 @@ namespace BooksWeb.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +47,7 @@ namespace BooksWeb.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -111,6 +116,10 @@ namespace BooksWeb.Areas.Identity.Pages.Account
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
+
+            public int? CompanyId { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
 
 
@@ -130,6 +139,11 @@ namespace BooksWeb.Areas.Identity.Pages.Account
                 {
                     Text = x,
                     Value = x
+                }),
+                CompanyList = _unitOfWork.Company.GetAll().Select(s => new SelectListItem
+                {
+                    Text = s.Name,
+                    Value = s.Id.ToString(),
                 })
             };
 
@@ -154,6 +168,10 @@ namespace BooksWeb.Areas.Identity.Pages.Account
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
                 user.Name = Input.Name;
+
+                if(Input.Role == SD.Role_Company) {
+                    user.CompanyId = Input.CompanyId;
+                }
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
