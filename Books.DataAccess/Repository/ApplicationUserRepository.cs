@@ -10,23 +10,13 @@ using System.Threading.Tasks;
 
 namespace Books.DataAccess.Repository
 {
-    public class ShoppingCartRepository : Repository<ShoppingCart>, IShoppingCartRepository
+    public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicationUserRepository
     {
         ApplicationDbContext _db;
 
-        public ShoppingCartRepository(ApplicationDbContext db) : base(db) 
+        public ApplicationUserRepository(ApplicationDbContext db) : base(db) 
         {
             _db = db;
-        }
-
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
-
-        public void Update(ShoppingCart obj)
-        {
-            _db.ShoppingCarts.Update(obj);
         }
     }
 }
