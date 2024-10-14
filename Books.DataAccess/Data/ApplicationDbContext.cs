@@ -19,8 +19,9 @@ namespace Books.DataAccess.Data
         public DbSet<Product> Products { get; set; } // The table of Product named Categories
         public DbSet<Company> Companies { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-
         public DbSet<ApplicationUser>  ApplicationUsers { get; set; } // if want to extend identity user
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

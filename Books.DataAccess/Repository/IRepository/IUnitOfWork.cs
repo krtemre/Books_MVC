@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Books.DataAccess.Repository.IRepository
+﻿namespace Books.DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
@@ -12,6 +6,10 @@ namespace Books.DataAccess.Repository.IRepository
         IProductRepository Product { get; }
         ICompanyRepository Company { get; }
         IShoppingCartRepository ShoppingCart { get; }
+
+        public IApplicationUserRepository ApplicationUser { get; }
+        public IOrderHeaderRepository OrderHeader { get; }
+        public IOrderDetailRepository OrderDetail { get; }
 
         void Save();
     }

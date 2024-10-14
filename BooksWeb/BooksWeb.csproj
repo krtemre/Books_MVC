@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\company.js" />
+    <Content Remove="wwwroot\js\order.js" />
     <Content Remove="wwwroot\js\product.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Order\PaymentConfirmation.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Customer\Views\Cart\OrderConfirmation.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\js\product.js" />
   </ItemGroup>
 
@@ -26,6 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
+    <PackageReference Include="Stripe.net" Version="45.11.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +43,16 @@
 
   <ItemGroup>
     <None Include="wwwroot\js\company.js" />
+    <None Include="wwwroot\js\order.js" />
     <None Include="wwwroot\js\product.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Customer\Views\Cart\OrderConfirmation.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Order\PaymentConfirmation.cshtml" />
   </ItemGroup>
 
 </Project>
