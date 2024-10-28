@@ -34,6 +34,11 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddAuthentication().AddFacebook(options => //Adding facebook login to login page
+{
+    options.AppId = "";
+    options.AppSecret = "";
+});
 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
