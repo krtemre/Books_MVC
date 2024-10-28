@@ -169,7 +169,8 @@ namespace BooksWeb.Areas.Identity.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
                 user.Name = Input.Name;
 
-                if(Input.Role == SD.Role_Company) {
+                if (Input.Role == SD.Role_Company)
+                {
                     user.CompanyId = Input.CompanyId;
                 }
 
@@ -179,10 +180,12 @@ namespace BooksWeb.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    if (!string.IsNullOrEmpty(Input.Role)) {
+                    if (!string.IsNullOrEmpty(Input.Role))
+                    {
                         await _userManager.AddToRoleAsync(user, Input.Role);
                     }
-                    else {
+                    else
+                    {
                         await _userManager.AddToRoleAsync(user, SD.Role_Customer);
                     }
 
@@ -204,7 +207,10 @@ namespace BooksWeb.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(SD.Role_Admin))
+                            TempData["success"] = "New User Created Successfully";
+                        else
+                            await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }
