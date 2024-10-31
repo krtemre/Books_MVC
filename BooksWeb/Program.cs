@@ -1,4 +1,5 @@
 using Books.DataAccess.Data;
+using Books.DataAccess.DbInitializer;
 using Books.DataAccess.Repository;
 using Books.DataAccess.Repository.IRepository;
 using Books.Utility;
@@ -34,15 +35,18 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddAuthentication().AddFacebook(options => //Adding facebook login to login page
-{
-    options.AppId = "";
-    options.AppSecret = "";
-});
+//builder.Services.AddAuthentication().AddFacebook(options => //Adding facebook login to login page
+//{
+//    options.AppId = "";
+//    options.AppSecret = "";
+//});
 
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+
 
 var app = builder.Build();
 
@@ -61,9 +65,19 @@ app.UseRouting();
 app.UseAuthentication(); //Comes before authorization
 app.UseAuthorization();
 app.UseSession();
+SeedDatabase();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}

@@ -125,7 +125,7 @@ namespace BooksWeb.Areas.Customer.Controllers
             {
                 //No member of any company regular customer
                 //stripe logic
-                var domain = "https://localhost:7144/";
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",

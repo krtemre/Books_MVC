@@ -141,7 +141,7 @@ namespace BooksWeb.Areas.Admin.Controllers
             OrderVM.Details = _unitOfWork.OrderDetail.GetAll(s => s.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
 
             //stripe logic
-            var domain = "https://localhost:7144/";
+            var domain = Request.Scheme + "://" + Request.Host.Value + "/";
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"admin/order/PaymentConfirmation?orderHeaderId={OrderVM.OrderHeader.Id}",
