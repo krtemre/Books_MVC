@@ -12,13 +12,14 @@ namespace Books.DataAccess.Repository
         public IApplicationUserRepository ApplicationUser { get; private set; }
         public IOrderHeaderRepository OrderHeader { get; private set; }
         public IOrderDetailRepository OrderDetail { get; private set; }
-
+        public IProductImageRepository ProductImage { get; private set; }
 
         private ApplicationDbContext _db;
 
         public UnitOfWork(ApplicationDbContext dp)
         {
             _db = dp;
+            ProductImage = new ProductImageRepository(_db);
             Category = new CategoryRepository(_db);
             Product = new ProductRepository(_db);
             Company = new CompanyRepository(_db);
